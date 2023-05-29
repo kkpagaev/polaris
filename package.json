@@ -7,7 +7,9 @@
     "format": "prettier --write \"src/**/*.ts\"",
     "build": "tsc",
     "start": "node dist/index.js",
-    "test:wacth": "jest --watch"
+    "test:watch": "jest --watch",
+    "test": "jest",
+    "test:coverage": "jest --coverage"
   },
   "dependencies": {
     "chalk": "^5.2.0",
