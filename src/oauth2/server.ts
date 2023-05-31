@@ -16,3 +16,23 @@ export function startServer() {
 
   console.log("foo bar")
 }
+
+export interface GoogleAuthConfig {
+  clientId: string
+  redirectUri: string
+}
+
+export function getGoogleOAuth2URL({
+  clientId,
+  redirectUri,
+}: GoogleAuthConfig) {
+  const params = [
+    `client_id=${clientId}`,
+    `redirect_uri=${redirectUri}`,
+    "response_type=code",
+    "access_type=offline&prompt=consent",
+    "scope=https://www.googleapis.com/auth/userinfo.email https://www.googleapis.com/auth/calendar",
+  ]
+
+  return "https://accounts.google.com/o/oauth2/auth?" + params.join("&")
+}
