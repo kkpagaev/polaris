@@ -14,11 +14,11 @@ export const login = async ({ port, clientId, clientSecret }: LoginOptions) => {
   if (clientId === undefined) {
     throw new Error("client id is required")
   }
-  const google = new GoogleOAuth(
+  const google = new GoogleOAuth({
     clientId,
     clientSecret,
-    `http://localhost:${port}/`,
-  )
+    redirectUri: `http://localhost:${port}`,
+  })
 
   const url = google.getAuthURL()
 
