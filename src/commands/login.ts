@@ -7,25 +7,25 @@ interface LoginOptions {
   clientId?: string
   clientSecret?: string
 }
-export const login = async (options: LoginOptions) => {
-  if (options.clientSecret === undefined) {
+export const login = async ({ port, clientId, clientSecret }: LoginOptions) => {
+  if (clientSecret === undefined) {
     throw new Error("client secret is required")
   }
-  if (options.clientId === undefined) {
+  if (clientId === undefined) {
     throw new Error("client id is required")
   }
   const google = new GoogleOAuth(
-    options.clientId,
-    options.clientSecret,
-    "http://localhost:8080/",
+    clientId,
+    clientSecret,
+    `http://localhost:${port}/`,
   )
 
   const url = google.getAuthURL()
 
   exec(`$BROWSER "${url}"`)
 
-  console.log("Starting server on port 8080")
-  const code = await startServer(8080, "code")
+  console.log(`Starting server on port ${port}`)
+  const code = await startServer(port, "code")
 
   const tokens = await google.exchangeCodeForToken(code)
   console.log("server stopped")
