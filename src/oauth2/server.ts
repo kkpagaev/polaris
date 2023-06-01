@@ -1,6 +1,16 @@
 import { createServer } from "http"
 import stoppable from "stoppable"
 
+// res = Crest.post(config.token_uri, {
+//   "code"          => code,
+//   "client_id"     => config.client_id,
+//   "client_secret" => config.client_secret,
+//   "redirect_uri"  => config.redirect_uri,
+//   "grant_type"    => "authorization_code",
+// }, json: true)
+// token_uri:
+// https://accounts.google.com/o/oauth2/auth
+
 export async function startServer() {
   return new Promise<void>((resolve) => {
     const server = stoppable(createServer())
@@ -11,7 +21,7 @@ export async function startServer() {
       resolve()
     })
 
-    const port = 3000
+    const port = 8080
     server.listen(port, () => {
       console.log(`Server running on port ${port}`)
     })
