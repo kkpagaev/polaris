@@ -1,15 +1,34 @@
 import { exec } from "child_process"
-import { getGoogleOAuth2URL, startServer } from "../oauth2/server"
+import { GoogleOAuth } from "../oauth2/google"
+import { startServer } from "../oauth2/server"
 
-export const login = async () => {
-  const url = getGoogleOAuth2URL({
-    clientId:
-      "647260528726-i4ajbc3sf2sav1va79qadhbrbn71gc5i.apps.googleusercontent.com",
-    redirectUri: "http://localhost:8080/",
-  })
+interface LoginOptions {
+  port: number
+  clientId?: string
+  clientSecret?: string
+}
+export const login = async (options: LoginOptions) => {
+  if (options.clientSecret === undefined) {
+    throw new Error("client secret is required")
+  }
+  if (options.clientId === undefined) {
+    throw new Error("client id is required")
+  }
+  const google = new GoogleOAuth(
+    options.clientId,
+    options.clientSecret,
+    "http://localhost:8080/",
+  )
+
+  const url = google.getAuthURL()
+
   exec(`$BROWSER "${url}"`)
 
-  console.log("starting server")
-  await startServer()
+  console.log("Starting server on port 8080")
+  const code = await startServer(8080, "code")
+
+  const tokens = await google.exchangeCodeForToken(code)
   console.log("server stopped")
+  console.log("code", code)
+  console.log("tokens", tokens)
 }

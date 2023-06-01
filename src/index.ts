@@ -13,7 +13,13 @@ export function main() {
     .description("CLI to some JavaScript string utilities")
     .version("0.8.0")
 
-  program.command("login").description("OAuth2 login to Google").action(login)
+  program
+    .command("login")
+    .option("-p, --port <port>", "port to start the server on", "8080")
+    .option("-s, --client-secret <string>", "OAuth2 client secret")
+    .option("-i, --client-id <string>", "OAuth2 client id")
+    .description("OAuth2 login to Google")
+    .action(login)
 
   program
     .command("split")
