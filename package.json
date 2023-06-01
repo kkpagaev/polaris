@@ -2,7 +2,7 @@
   "name": "polaris",
   "packageManager": "yarn@3.5.0",
   "scripts": {
-    "dev": "nodemon src/index.ts",
+    "dev": "ts-node src/index.ts",
     "lint": "eslint --ext .ts src",
     "format": "prettier --write \"src/**/*.ts\"",
     "build": "tsc",

@@ -1,4 +1,5 @@
 import { Command } from "commander"
+import { login } from "./commands/login"
 
 export function hello(str: string) {
   return `Hello ${str}`
@@ -12,6 +13,8 @@ export function main() {
     .description("CLI to some JavaScript string utilities")
     .version("0.8.0")
 
+  program.command("login").description("OAuth2 login to Google").action(login)
+
   program
     .command("split")
     .description("Split a string into substrings and display as an array")
@@ -24,4 +27,7 @@ export function main() {
     })
 
   program.parse()
+}
+if (process.env.NODE_ENV !== "test") {
+  main()
 }
