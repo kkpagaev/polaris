@@ -10,12 +10,45 @@ export interface GoogleOAuth2Tokens {
   created_at?: Date
 }
 
-export interface Config {
+export interface ConfigData {
   tokens?: GoogleOAuth2Tokens
 }
 
+export class Config {
+  data: ConfigData
+  configDir: string
+
+  constructor(configDir: string, data: ConfigData) {
+    this.configDir = configDir
+    this.data = data
+  }
+
+  getTokens(): GoogleOAuth2Tokens | undefined {
+    return this.data.tokens
+  }
+
+  setTokens(tokens: GoogleOAuth2Tokens) {
+    this.data.tokens = tokens
+    return this
+  }
+
+  static get(configDir: string): Config {
+    return new Config(configDir, getConfig(configDir))
+  }
+
+  save() {
+    if (!fs.existsSync(this.configDir)) {
+      fs.mkdirSync(this.configDir)
+    }
+    const configPath = `${this.configDir}/config.json`
+    fs.writeFileSync(configPath, JSON.stringify(this.data))
+
+    return this.data
+  }
+}
+
 // Default path ~./.polaris/config.json
-export const getConfig = (configDir: string): Config => {
+const getConfig = (configDir: string): ConfigData => {
   if (!fs.existsSync(configDir)) {
     fs.mkdirSync(configDir)
   }
@@ -28,15 +61,5 @@ export const getConfig = (configDir: string): Config => {
   if (config.tokens) {
     config.tokens.created_at = new Date(config.tokens.created_at)
   }
-  return config
-}
-
-export const setConfig = (configDir: string, config: Config) => {
-  if (!fs.existsSync(configDir)) {
-    fs.mkdirSync(configDir)
-  }
-  const configPath = `${configDir}/config.json`
-  fs.writeFileSync(configPath, JSON.stringify(config))
-
   return config
 }
