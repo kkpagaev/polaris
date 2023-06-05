@@ -20,9 +20,7 @@ export const login = async ({ port, clientId, clientSecret }: LoginOptions) => {
     redirectUri: `http://localhost:${port}`,
   })
 
-  const url = google.getAuthURL()
-
-  exec(`$BROWSER "${url}"`)
+  exec(`$BROWSER "${google.getAuthURL()}"`)
 
   console.log(`Starting server on port ${port}`)
   const code = await startServer(port, "code")
