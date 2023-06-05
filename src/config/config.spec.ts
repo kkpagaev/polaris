@@ -5,7 +5,9 @@ const dir = "./.polaris"
 
 describe("config", () => {
   beforeEach(() => {
-    fs.rmSync(dir, { recursive: true })
+    if (fs.existsSync(dir)) {
+      fs.rmSync(dir, { recursive: true })
+    }
   })
   const tokens = {
     expires_in: 1000,
