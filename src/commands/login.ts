@@ -1,6 +1,7 @@
 import { exec } from "child_process"
 import { GoogleOAuth } from "../oauth2/google"
 import { startServer } from "../oauth2/server"
+import { Config } from "../config/config"
 
 interface LoginOptions {
   port: number
@@ -26,6 +27,10 @@ export const login = async ({ port, clientId, clientSecret }: LoginOptions) => {
   const code = await startServer(port, "code")
 
   const tokens = await google.exchangeCodeForToken(code)
+
+  const config = Config.get("./.polaris")
+  config.setTokens(tokens).save()
+
   console.log("server stopped")
   console.log("code", code)
   console.log("tokens", tokens)
