@@ -28,6 +28,9 @@ export class Config {
   }
 
   setTokens(tokens: GoogleOAuth2Tokens) {
+    if (!tokens.created_at) {
+      tokens.created_at = new Date()
+    }
     this.data.tokens = tokens
     return this
   }
