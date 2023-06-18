@@ -1,7 +1,6 @@
 import { BaseParser } from "./base-parser"
 import { ScheduleEvent, Range } from "./event-models"
 import { OptionsParser } from "./options-parser"
-import { ParsingResultUtil } from "./parsing-result"
 import { isDigit } from "./utils"
 
 export class EventParser extends BaseParser<ScheduleEvent> {
@@ -20,23 +19,16 @@ export class EventParser extends BaseParser<ScheduleEvent> {
   }
 
   public parseTitle(): string {
-    const title: string[] = []
-
-    while (!["", "|", "\n"].includes(this.peek())) {
-      title.push(this.next())
-    }
-
-    return title.join("").trim()
+    return this.many(() => this.noneOf(["", "|", "\n"]))
+      .join("")
+      .trim()
   }
 
   public parseTimeOrSpan(): Range<string> | string {
-    const range = this.attempt(() => this.parseTimeSpan())
-
-    if (!ParsingResultUtil.isSuccess(range)) {
-      return this.parseTime()
-    }
-
-    return range.value
+    return this.choice<Range<string> | string>(
+      () => this.parseTimeSpan(),
+      () => this.parseTime(),
+    )
   }
 
   public parseTime(): string {

@@ -2,6 +2,7 @@ import {
   FailureParsingResult,
   ParsingResult,
   SuccessParsingResult,
+  isSuccess,
 } from "./parsing-result"
 import { isWhiteSpace } from "./utils"
 
@@ -127,13 +128,27 @@ export abstract class BaseParser<TResult = unknown> {
    */
   public sat(
     predicate: (char: string) => boolean,
-    errorMessage: string,
+    errorMessage?: string,
   ): string {
     if (!predicate(this.peek())) {
       throw new Error(errorMessage)
     }
 
     return this.next()
+  }
+
+  public oneOf(chars: string[]): string {
+    return this.sat(
+      (ch) => chars.includes(ch),
+      `Expected one of the following: ${JSON.stringify(chars)}.`,
+    )
+  }
+
+  public noneOf(chars: string[]): string {
+    return this.sat(
+      (ch) => !chars.includes(ch),
+      `Expected none of the following: ${JSON.stringify(chars)}.`,
+    )
   }
 
   /**
@@ -169,7 +184,7 @@ export abstract class BaseParser<TResult = unknown> {
     } catch (e) {
       this.pos = startPos
 
-      return new FailureParsingResult()
+      return new FailureParsingResult(e)
     }
   }
 
@@ -184,5 +199,21 @@ export abstract class BaseParser<TResult = unknown> {
     this.pos = otherParser.pos
 
     return result
+  }
+
+  public choice<T>(...parsers: (() => T)[]): T {
+    for (let i = 0; i < parsers.length - 1; i++) {
+      const parser = parsers[i]
+
+      const result = this.attempt(() => parser())
+
+      if (isSuccess(result)) {
+        return result.value
+      }
+    }
+
+    const lastParser = parsers[parsers.length - 1]
+
+    return lastParser()
   }
 }

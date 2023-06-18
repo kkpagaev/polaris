@@ -11,6 +11,8 @@ export class SuccessParsingResult<T> {
 export class FailureParsingResult<T = any> {
   public readonly tag = "Failure"
 
+  constructor(public err?: Error) {}
+
   public getOrElse(defaultValue: T): T {
     return defaultValue
   }
