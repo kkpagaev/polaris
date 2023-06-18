@@ -9,6 +9,8 @@ export class ScheduleEvent {
     public time: Range<string> | string,
     public title: string,
     public options: OptionInfo[],
+    public description: string[],
+    public hashTags: string[],
   ) {}
 }
 

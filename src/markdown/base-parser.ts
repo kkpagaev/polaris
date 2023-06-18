@@ -19,8 +19,8 @@ export abstract class BaseParser<TResult = unknown> {
 
   public next(): string {
     if (this.isOver()) {
-      // throw new Error(`Unexpected end of input. Pos: ${this.pos}`)
-      return ""
+      throw new Error(`Unexpected end of input. Pos: ${this.pos}`)
+      // return ""
     }
 
     return this.input.charAt(this.pos++)
@@ -162,6 +162,22 @@ export abstract class BaseParser<TResult = unknown> {
     }
 
     return this.next()
+  }
+
+  public expectSat(
+    predicate: (char: string) => boolean,
+    errorMessage?: string,
+  ): void {
+    if (!predicate(this.peek())) {
+      throw new Error(errorMessage)
+    }
+  }
+
+  public expectOneOf(chars: string[]): void {
+    this.expectSat(
+      (ch) => chars.includes(ch),
+      `Expected one of the following: ${JSON.stringify(chars)}.`,
+    )
   }
 
   public oneOf(chars: string[]): string {

@@ -10,7 +10,7 @@ export class OptionsParser extends BaseParser<OptionInfo[]> {
     const options = this.many(() => this.parseOption())
 
     this.spaces()
-    this.oneOf(["", "\n"])
+    this.expectOneOf(["", "\n"])
 
     return options
   }

@@ -1,5 +1,7 @@
 import { BaseParser } from "./base-parser"
+import { DescriptionParser } from "./description-parser"
 import { OptionInfo, ScheduleEvent } from "./event-models"
+import { HashTagsParser } from "./hashtags-parser"
 import { OptionsParser } from "./options-parser"
 import { TimeInfoParser } from "./time-parser"
 
@@ -12,10 +14,11 @@ export class EventParser extends BaseParser<ScheduleEvent> {
     this.spaces1()
 
     const title = this.parseTitle()
-
     const options = this.parseOptions()
+    const description = this.applyParser(DescriptionParser)
+    const hashTags = this.applyParser(HashTagsParser)
 
-    return new ScheduleEvent(time, title, options)
+    return new ScheduleEvent(time, title, options, description, hashTags)
   }
 
   private parseTitle(): string {
