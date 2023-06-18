@@ -1,5 +1,6 @@
 import { BaseParser } from "./base-parser"
 import { ScheduleEvent, Range, OptionInfo } from "./event-models"
+import { ParsingResultUtil } from "./parsing-result"
 import { isDigit } from "./utils"
 
 export class EventParser extends BaseParser {
@@ -43,11 +44,11 @@ export class EventParser extends BaseParser {
   public parseTimeOrSpan(): Range<string> | string {
     const range = this.attempt(() => this.parseTimeSpan())
 
-    if (!range) {
+    if (!ParsingResultUtil.isSuccess(range)) {
       return this.parseTime()
     }
 
-    return range
+    return range.value
   }
 
   public parseTime(): string {

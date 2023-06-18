@@ -1,3 +1,10 @@
+import {
+  FailureParsingResult,
+  ParsingResult,
+  SuccessParsingResult,
+} from "./parsing-result"
+import { isWhiteSpace } from "./utils"
+
 export class BaseParser {
   public input: string
   public pos: number
@@ -24,7 +31,7 @@ export class BaseParser {
   }
 
   public spaces(): void {
-    while (this.isWhiteSpace(this.peek())) {
+    while (isWhiteSpace(this.peek())) {
       this.next()
     }
   }
@@ -32,17 +39,14 @@ export class BaseParser {
   public spaces1(): void {
     const nextChar = this.peek()
 
-    if (!this.isWhiteSpace(nextChar)) {
+    if (!isWhiteSpace(nextChar)) {
       throw new Error(
         `Unexpected character: "${nextChar}". Expecting whitespace.`,
       )
     }
 
     this.next()
-
-    while (this.isWhiteSpace(this.peek())) {
-      this.next()
-    }
+    this.spaces()
   }
 
   public matchString(target: string): void {
@@ -63,10 +67,12 @@ export class BaseParser {
     }
   }
 
-  public isWhiteSpace(char: string): boolean {
-    return char === " "
-  }
-
+  /**
+   *
+   * @param times - the number of times to repeat a parsing callback
+   * @param callback - the callback that implements some parsing logic
+   * @returns
+   */
   public repeat<T>(times: number, callback: (time: number) => T): T[] {
     const result: T[] = []
 
@@ -78,7 +84,44 @@ export class BaseParser {
   }
 
   /**
+   *
+   * @param callback
+   * @returns
+   */
+  public many<T>(callback: () => T): T[] {
+    const results: T[] = []
+
+    while (true) {
+      const currentResult = this.optional(() => callback())
+
+      if (currentResult.tag === "Failure") {
+        break
+      }
+
+      results.push(currentResult.value)
+    }
+
+    return results
+  }
+
+  /**
+   *
+   * @param callback
+   * @returns
+   */
+  public many1<T>(callback: () => T): T[] {
+    const results: T[] = []
+
+    results.push(callback())
+
+    return results.concat(this.many(callback))
+  }
+
+  /**
    * Parse a char satisfying a condition
+   * @param predicate
+   * @param errorMessage
+   * @returns
    */
   public sat(
     predicate: (char: string) => boolean,
@@ -91,30 +134,40 @@ export class BaseParser {
     return this.next()
   }
 
-  public optional<T>(callback: () => T): T | null {
+  /**
+   *
+   * @param callback
+   * @returns
+   */
+  public optional<T>(callback: () => T): ParsingResult<T> {
     const startPos = this.pos
 
     try {
-      return callback()
+      return new SuccessParsingResult(callback())
     } catch (e) {
       // no error only if no consumed input
       if (this.pos === startPos) {
-        return null
+        return new FailureParsingResult()
       }
 
       throw e
     }
   }
 
-  public attempt<T>(callback: () => T): T | null {
+  /**
+   *
+   * @param callback
+   * @returns
+   */
+  public attempt<T>(callback: () => T): ParsingResult<T> {
     const startPos = this.pos
 
     try {
-      return callback()
+      return new SuccessParsingResult(callback())
     } catch (e) {
       this.pos = startPos
 
-      return null
+      return new FailureParsingResult()
     }
   }
 }
