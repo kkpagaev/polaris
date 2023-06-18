@@ -15,7 +15,6 @@ export class OptionsParser extends BaseParser<OptionInfo[]> {
   public parseOption(): OptionInfo {
     this.matchString("-")
     const name = this.parseOptionName()
-
     this.spaces()
 
     return new OptionInfo(name, true)

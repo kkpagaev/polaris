@@ -2,6 +2,8 @@ export class Range<T> {
   constructor(public start: T, public end: T) {}
 }
 
+export type TimeInfo = Range<string> | string
+
 export class ScheduleEvent {
   constructor(
     public time: Range<string> | string,

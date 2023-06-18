@@ -4,7 +4,7 @@ import {
   SuccessParsingResult,
   isSuccess,
 } from "./parsing-result"
-import { isWhiteSpace } from "./utils"
+import { isDigit, isWhiteSpace } from "./utils"
 
 export abstract class BaseParser<TResult = unknown> {
   public input: string
@@ -149,6 +149,10 @@ export abstract class BaseParser<TResult = unknown> {
       (ch) => !chars.includes(ch),
       `Expected none of the following: ${JSON.stringify(chars)}.`,
     )
+  }
+
+  public digit(): string {
+    return this.sat(isDigit, "Expecting a digit")
   }
 
   /**
