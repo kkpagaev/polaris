@@ -173,10 +173,9 @@ export abstract class BaseParser<TResult = unknown> {
     }
   }
 
-  public applyParser<
-    CustomResult,
-    DerivedParser extends BaseParser<CustomResult>,
-  >(parserClass: { new (input: string): DerivedParser }): CustomResult {
+  public applyParser<CustomResult>(parserClass: {
+    new (input: string): BaseParser<CustomResult>
+  }): CustomResult {
     const otherParser = new parserClass(this.input)
     otherParser.pos = this.pos
 

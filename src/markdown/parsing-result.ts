@@ -2,13 +2,21 @@ export class SuccessParsingResult<T> {
   public readonly tag = "Success"
 
   constructor(public value: T) {}
+
+  public getOrElse(defaultValue: T): T {
+    return this.value
+  }
 }
 
-export class FailureParsingResult {
+export class FailureParsingResult<T = any> {
   public readonly tag = "Failure"
+
+  public getOrElse(defaultValue: T): T {
+    return defaultValue
+  }
 }
 
-export type ParsingResult<T> = SuccessParsingResult<T> | FailureParsingResult
+export type ParsingResult<T> = SuccessParsingResult<T> | FailureParsingResult<T>
 
 export const isSuccess = <T>(
   value: ParsingResult<T>,

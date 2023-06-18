@@ -1,34 +1,22 @@
 import { BaseParser } from "./base-parser"
-import { ScheduleEvent, Range, OptionInfo } from "./event-models"
+import { ScheduleEvent, Range } from "./event-models"
+import { OptionsParser } from "./options-parser"
 import { ParsingResultUtil } from "./parsing-result"
 import { isDigit } from "./utils"
 
-export class EventParser extends BaseParser {
-  public parseEvent(): ScheduleEvent {
+export class EventParser extends BaseParser<ScheduleEvent> {
+  public parse(): ScheduleEvent {
     this.matchString("-")
     this.spaces1()
     const time = this.parseTimeOrSpan()
     this.spaces1()
     const title = this.parseTitle()
-    // this.matchString("|")
 
-    return new ScheduleEvent(time, title)
-  }
+    const options = this.optional(() =>
+      this.applyParser(OptionsParser),
+    ).getOrElse([])
 
-  public parseOptions(): OptionInfo[] {
-    return []
-  }
-
-  public parseOption(): OptionInfo {
-    this.matchString("-")
-
-    return {} as OptionInfo
-  }
-
-  public parseOptionName(): OptionInfo {
-    this.matchString("-")
-
-    return {} as OptionInfo
+    return new ScheduleEvent(time, title, options)
   }
 
   public parseTitle(): string {

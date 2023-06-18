@@ -3,7 +3,11 @@ export class Range<T> {
 }
 
 export class ScheduleEvent {
-  constructor(public time: Range<string> | string, public title: string) {}
+  constructor(
+    public time: Range<string> | string,
+    public title: string,
+    public options: OptionInfo[],
+  ) {}
 }
 
 export class OptionInfo<Value = any> {
