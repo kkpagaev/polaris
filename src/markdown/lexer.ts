@@ -1,65 +1,68 @@
-export enum TokenType {
-  Illegal,
-  Eof,
-  Ident = "IDENT",
-  Int = "INT",
-  Dash = "-",
-  Sharp = "#",
-}
+// export enum TokenType {
+//   Illegal,
+//   Eof,
+//   Ident = "IDENT",
+//   Int = "INT",
+//   Dash = "-",
+//   Sharp = "#",
+// }
 
-export type Token<Type extends TokenType, Literal extends string> = {
-  type: Type
-  literal: Literal
-}
+import exp from "constants"
 
-export const createToken = <Type extends TokenType, Literal extends string>(
-  type: Type,
-  literal: Literal,
-): Token<Type, Literal> => ({ type, literal })
+// export type Token<Type extends TokenType, Literal extends string> = {
+//   type: Type
+//   literal: Literal
+// }
 
-export class Tokenizer {
-  private position: number = 0
-  private ch: string
-  private input: string
+// export const createToken = <Type extends TokenType, Literal extends string>(
+//   type: Type,
+//   literal: Literal,
+// ): Token<Type, Literal> => ({ type, literal })
 
-  constructor(input: string) {
-    this.input = input
+// export class Tokenizer {
+//   private position: number = 0
+//   private ch: string
+//   private input: string
 
-    this.readChar()
-  }
+//   constructor(input: string) {
+//     this.input = input
 
-  private readChar() {
-    this.ch = this.input[this.position]
-    this.position++
-  }
+//     this.readChar()
+//   }
 
-  nextToken(): Token<TokenType, string> {
-    let token: Token<TokenType, string>
+//   private readChar() {
+//     this.ch = this.input[this.position]
+//     this.position++
+//   }
 
-    switch (this.ch) {
-      case "-":
-        token = createToken(TokenType.Dash, this.ch)
-        break
-      case "#":
-        token = createToken(TokenType.Sharp, this.ch)
-        break
-      case "":
-        token = createToken(TokenType.Eof, "")
-        break
-      default:
-        if (this.isLetter(this.ch)) {
-          const literal = this.readIdentifier()
-          return createToken(TokenType.Ident, literal)
-        } else if (this.isDigit(this.ch)) {
-          const literal = this.readNumber()
-          return createToken(TokenType.Int, literal)
-        } else {
-          token = createToken(TokenType.Illegal, this.ch)
-        }
-    }
+//   nextToken(): Token<TokenType, string> {
+//     let token: Token<TokenType, string>
 
-    this.readChar()
+//     switch (this.ch) {
+//       case "-":
+//         token = createToken(TokenType.Dash, this.ch)
+//         break
+//       case "#":
+//         token = createToken(TokenType.Sharp, this.ch)
+//         break
+//       case "":
+//         token = createToken(TokenType.Eof, "")
+//         break
+//       default:
+//         if (this.isLetter(this.ch)) {
+//           const literal = this.readIdentifier()
+//           return createToken(TokenType.Ident, literal)
+//         } else if (this.isDigit(this.ch)) {
+//           const literal = this.readNumber()
+//           return createToken(TokenType.Int, literal)
+//         } else {
+//           token = createToken(TokenType.Illegal, this.ch)
+//         }
+//     }
 
-    return token
-  }
-}
+//     this.readChar()
+
+//     return token
+//   }
+// }
+export {}

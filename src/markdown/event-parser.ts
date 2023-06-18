@@ -1,83 +1,34 @@
 import { BaseParser } from "./base-parser"
-import { ScheduleEvent, Range } from "./event-models"
+import { DescriptionParser } from "./description-parser"
+import { OptionInfo, ScheduleEvent } from "./event-models"
+import { HashTagsParser } from "./hashtags-parser"
+import { OptionsParser } from "./options-parser"
+import { TimeInfoParser } from "./time-parser"
 
-export class EventParser extends BaseParser {
-  public parseEvent(): ScheduleEvent {
+export class EventParser extends BaseParser<ScheduleEvent> {
+  public parse(): ScheduleEvent {
+    this.spaces()
     this.matchString("-")
     this.spaces1()
-    const time = this.parseTimePointOrTimeSpan()
+
+    const time = this.applyParser(TimeInfoParser)
+    this.spaces1()
+
     const title = this.parseTitle()
-    // this.matchString("|")
+    const options = this.parseOptions()
+    const description = this.applyParser(DescriptionParser)
+    // const hashTags = this.applyParser(HashTagsParser)
 
-    return new ScheduleEvent(time, title)
+    return new ScheduleEvent(time, title, options, description, [])
   }
 
-  public parseWord(): string {
-    const result: string[] = []
-    const nextChar = this.next()
-
-    if (!this.isLetter(nextChar)) {
-      throw new Error(`Expecting at least one letter`)
-    }
-    result.push(nextChar)
-
-    while (this.isLetter(this.peek())) {
-      result.push(this.next())
-    }
-
-    return result.join("")
+  private parseTitle(): string {
+    return this.many(() => this.noneOf(["", "|", "\n"]))
+      .join("")
+      .trim()
   }
 
-  public parseTitle(): string {
-    const title: string[] = []
-
-    while (!["", "|", "\n"].includes(this.peek())) {
-      title.push(this.next())
-    }
-
-    return title.join("").trim()
-  }
-
-  public parseTime(): string {
-    const hourDigits: string[] = []
-
-    this.repeat(2, () => {
-      if (!this.isDigit(this.peek())) {
-        throw new Error("Expecting a digit")
-      }
-
-      hourDigits.push(this.next())
-    })
-
-    this.matchString(":")
-
-    const minuteDigits: string[] = []
-
-    this.repeat(2, () => {
-      if (!this.isDigit(this.peek())) {
-        throw new Error("Expecting a digit")
-      }
-
-      minuteDigits.push(this.next())
-    })
-
-    return hourDigits.join("") + ":" + minuteDigits.join("")
-  }
-
-  public parseTimePointOrTimeSpan(): Range<string> | string {
-    const start = this.parseTime()
-    this.spaces()
-
-    if (this.peek() === "-") {
-      this.next()
-      this.spaces()
-
-      const end = this.parseTime()
-      this.spaces()
-
-      return new Range(start, end)
-    }
-
-    return start
+  private parseOptions(): OptionInfo[] {
+    return this.optional(() => this.applyParser(OptionsParser)).getOrElse([])
   }
 }
