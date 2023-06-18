@@ -19,7 +19,8 @@ export abstract class BaseParser<TResult = unknown> {
 
   public next(): string {
     if (this.isOver()) {
-      throw new Error(`Unexpected end of input`)
+      // throw new Error(`Unexpected end of input. Pos: ${this.pos}`)
+      return ""
     }
 
     return this.input.charAt(this.pos++)
@@ -97,7 +98,7 @@ export abstract class BaseParser<TResult = unknown> {
     while (true) {
       const currentResult = this.optional(() => callback())
 
-      if (currentResult.tag === "Failure") {
+      if (!isSuccess(currentResult)) {
         break
       }
 
@@ -118,6 +119,32 @@ export abstract class BaseParser<TResult = unknown> {
     results.push(callback())
 
     return results.concat(this.many(callback))
+  }
+
+  public sepBy<T>(valueParser: () => T, sepParser: () => any): T[] {
+    const results: T[] = []
+    const firstValueResult = this.optional(() => valueParser())
+
+    if (!isSuccess(firstValueResult)) {
+      return []
+    }
+
+    results.push(firstValueResult.value)
+
+    while (true) {
+      const sepAndValueResult = this.optional(() => {
+        sepParser()
+        return valueParser()
+      })
+
+      if (!isSuccess(sepAndValueResult)) {
+        break
+      }
+
+      results.push(sepAndValueResult.value)
+    }
+
+    return results
   }
 
   /**

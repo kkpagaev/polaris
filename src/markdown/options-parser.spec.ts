@@ -8,4 +8,14 @@ describe("EventParser", () => {
       new OptionInfo("foo-bar", true),
     ])
   })
+
+  it("should parse options with different values", () => {
+    expect(
+      new OptionsParser(`| -m -c red -p [string, foo@bar.com, vlad]`).parse(),
+    ).toEqual([
+      new OptionInfo("m", true),
+      new OptionInfo("c", "red"),
+      new OptionInfo("p", ["string", "foo@bar.com", "vlad"]),
+    ])
+  })
 })
