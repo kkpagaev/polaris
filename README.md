@@ -9,7 +9,7 @@ Polaris is calendar managing cli
   description line 1  
   description line 2
 
-#foo
+#foo #baz
 
 - 16:00 Title 2 | -c green
   description line 1
