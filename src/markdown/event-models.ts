@@ -5,3 +5,7 @@ export class Range<T> {
 export class ScheduleEvent {
   constructor(public time: Range<string> | string, public title: string) {}
 }
+
+export class OptionInfo<Value = any> {
+  constructor(public name: string, public value: Value) {}
+}

@@ -1,6 +1,6 @@
 export class BaseParser {
-  private input: string
-  private pos: number
+  public input: string
+  public pos: number
 
   constructor(input: string) {
     this.input = input
@@ -30,9 +30,11 @@ export class BaseParser {
   }
 
   public spaces1(): void {
-    if (!this.isWhiteSpace(this.peek())) {
+    const nextChar = this.peek()
+
+    if (!this.isWhiteSpace(nextChar)) {
       throw new Error(
-        `Unexpected character: "${this.peek()}". Expecting whitespace.`,
+        `Unexpected character: "${nextChar}". Expecting whitespace.`,
       )
     }
 
@@ -45,13 +47,19 @@ export class BaseParser {
 
   public matchString(target: string): void {
     for (let i = 0; i < target.length; i++) {
-      const nextChar = this.next()
+      const nextChar = this.peek()
+
+      if (nextChar === "") {
+        throw new Error(`Unexpected end of input`)
+      }
 
       if (nextChar !== target[i]) {
         throw new Error(
           `Unexpected character: ${nextChar}. Expecting '${target[i]}' at position ${this.pos}`,
         )
       }
+
+      this.next()
     }
   }
 
@@ -59,17 +67,54 @@ export class BaseParser {
     return char === " "
   }
 
-  public isLetter(char: string): boolean {
-    return /[a-zA-Z]/.test(char)
-  }
+  public repeat<T>(times: number, callback: (time: number) => T): T[] {
+    const result: T[] = []
 
-  public isDigit(char: string): boolean {
-    return /[0-9]/.test(char)
-  }
-
-  public repeat(times: number, callback: (time: number) => any) {
     for (let i = 0; i < times; i++) {
-      callback(i)
+      result.push(callback(i))
+    }
+
+    return result
+  }
+
+  /**
+   * Parse a char satisfying a condition
+   */
+  public sat(
+    predicate: (char: string) => boolean,
+    errorMessage: string,
+  ): string {
+    if (!predicate(this.peek())) {
+      throw new Error(errorMessage)
+    }
+
+    return this.next()
+  }
+
+  public optional<T>(callback: () => T): T | null {
+    const startPos = this.pos
+
+    try {
+      return callback()
+    } catch (e) {
+      // no error only if no consumed input
+      if (this.pos === startPos) {
+        return null
+      }
+
+      throw e
+    }
+  }
+
+  public attempt<T>(callback: () => T): T | null {
+    const startPos = this.pos
+
+    try {
+      return callback()
+    } catch (e) {
+      this.pos = startPos
+
+      return null
     }
   }
 }
