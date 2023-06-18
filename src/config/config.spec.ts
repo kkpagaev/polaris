@@ -27,14 +27,14 @@ describe("config", () => {
 
   it("should set config", () => {
     const config = Config.get(dir)
-    config.setTokens(data.tokens)
+    config.setTokens(<any>data.tokens)
     expect(config.data).toEqual(data)
   })
 
   it("should set config and get config", () => {
     const config = Config.get(dir)
 
-    config.setTokens(data.tokens).save()
+    config.setTokens(<any>data.tokens).save()
 
     expect(Config.get(dir).data).toEqual(data)
   })

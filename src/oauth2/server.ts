@@ -10,13 +10,13 @@ export async function startServer(port: number, param: string) {
 
     server.on("request", (req, res) => {
       const getParam = new URL(
-        req.url,
+        <any>req.url,
         "http://localhost:8080",
       ).searchParams.get(param)
 
       res.end(JSON.stringify({ message: "Hello, Vlad!" }))
       server.stop()
-      resolve(getParam)
+      resolve(<any>getParam)
     })
 
     server.listen(port, () => {
