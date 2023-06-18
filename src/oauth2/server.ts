@@ -9,10 +9,21 @@ export async function startServer(port: number, param: string) {
     const server = stoppable(createServer())
 
     server.on("request", (req, res) => {
-      const getParam = new URL(
-        <any>req.url,
-        "http://localhost:8080",
-      ).searchParams.get(param)
+      const url = req.url
+
+      if (!url) {
+        res.end(JSON.stringify({ message: "Something went wrong" }))
+        return
+      }
+
+      const getParam = new URL(url, "http://localhost:8080").searchParams.get(
+        param,
+      )
+
+      if (!getParam) {
+        res.end(JSON.stringify({ message: "Something went wrong" }))
+        return
+      }
 
       res.end(JSON.stringify({ message: "Hello, Vlad!" }))
       server.stop()
