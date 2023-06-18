@@ -1,8 +1,9 @@
 import { BaseParser } from "./base-parser"
+import { isLetter } from "./utils"
 
 describe("BaseParser", () => {
   describe("optional", () => {
-    class OptionalParser extends BaseParser {
+    class OptionalParser extends BaseParser<void> {
       constructor(input) {
         super(input)
       }
@@ -27,7 +28,7 @@ describe("BaseParser", () => {
   })
 
   describe("attempt", () => {
-    class AttemptParser extends BaseParser {
+    class AttemptParser extends BaseParser<void> {
       constructor(input) {
         super(input)
       }
@@ -56,7 +57,7 @@ describe("BaseParser", () => {
   })
 
   describe("many", () => {
-    class ManyParser extends BaseParser {
+    class ManyParser extends BaseParser<void[]> {
       constructor(input) {
         super(input)
       }
@@ -93,7 +94,7 @@ describe("BaseParser", () => {
   })
 
   describe("many1", () => {
-    class Many1Parser extends BaseParser {
+    class Many1Parser extends BaseParser<void[]> {
       constructor(input) {
         super(input)
       }
@@ -114,6 +115,38 @@ describe("BaseParser", () => {
     it("should fail when 0 results matched", () => {
       const p = new Many1Parser("hello2 ")
       expect(() => p.parse()).toThrow()
+    })
+  })
+
+  describe("applyParser", () => {
+    class MainParser extends BaseParser<any> {
+      constructor(input) {
+        super(input)
+      }
+
+      parse() {
+        this.matchString("hello ")
+      }
+    }
+
+    class OtherParser extends BaseParser<string> {
+      constructor(input) {
+        super(input)
+      }
+
+      parse() {
+        return this.many(() => this.sat(isLetter, "expected a letter")).join("")
+      }
+    }
+
+    it("should succeed with one result", () => {
+      const input = "hello world"
+
+      const p = new MainParser(input)
+      p.parse()
+      const result = p.applyParser(OtherParser)
+      expect(result).toEqual("world")
+      expect(p.pos).toBe(input.length)
     })
   })
 })

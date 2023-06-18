@@ -5,7 +5,7 @@ import {
 } from "./parsing-result"
 import { isWhiteSpace } from "./utils"
 
-export class BaseParser {
+export abstract class BaseParser<TResult = unknown> {
   public input: string
   public pos: number
 
@@ -13,6 +13,8 @@ export class BaseParser {
     this.input = input
     this.pos = 0
   }
+
+  public abstract parse(): TResult
 
   public next(): string {
     if (this.isOver()) {
@@ -169,5 +171,19 @@ export class BaseParser {
 
       return new FailureParsingResult()
     }
+  }
+
+  public applyParser<
+    CustomResult,
+    DerivedParser extends BaseParser<CustomResult>,
+  >(parserClass: { new (input: string): DerivedParser }): CustomResult {
+    const otherParser = new parserClass(this.input)
+    otherParser.pos = this.pos
+
+    const result = otherParser.parse()
+
+    this.pos = otherParser.pos
+
+    return result
   }
 }
