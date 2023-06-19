@@ -9,7 +9,7 @@ export enum EditorType {
   HELIX,
 }
 
-function isWindows(params: type) {
+function isWindows() {
   return process.platform === "win32"
 }
 
@@ -19,7 +19,7 @@ function getEditorParams(
 ): [string, Array<string>] {
   switch (editor) {
     case EditorType.VSCODE:
-      if (isWin()) {
+      if (isWindows()) {
         return ["code.cmd", [filePath, "-w"]]
       }
       return ["code", [filePath, "-w"]]
