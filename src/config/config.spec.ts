@@ -1,5 +1,5 @@
 import * as fs from "fs"
-import { ConfigData, Config } from "./config"
+import { Config, GoogleOAuth2Tokens } from "./config"
 
 const dir = "./.polaris"
 
@@ -9,16 +9,14 @@ describe("config", () => {
       fs.rmSync(dir, { recursive: true })
     }
   })
-  const data: ConfigData = {
-    tokens: {
-      expires_in: 1000,
-      scope: "scope",
-      id_token: "id_token",
-      token_type: "token_type",
-      created_at: new Date(2023, 1, 1),
-      access_token: "access_token",
-      refresh_token: "refresh_token",
-    },
+  const tokens: GoogleOAuth2Tokens = {
+    expires_in: 1000,
+    scope: "scope",
+    id_token: "id_token",
+    token_type: "token_type",
+    created_at: new Date(2023, 1, 1),
+    access_token: "access_token",
+    refresh_token: "refresh_token",
   }
   it("should return config", () => {
     const config = Config.get(dir)
@@ -27,15 +25,19 @@ describe("config", () => {
 
   it("should set config", () => {
     const config = Config.get(dir)
-    config.setTokens(data.tokens)
-    expect(config.data).toEqual(data)
+    config.setTokens(tokens)
+    expect(config.data).toEqual({
+      tokens: tokens,
+    })
   })
 
   it("should set config and get config", () => {
     const config = Config.get(dir)
 
-    config.setTokens(data.tokens).save()
+    config.setTokens(tokens).save()
 
-    expect(Config.get(dir).data).toEqual(data)
+    expect(Config.get(dir).data).toEqual({
+      tokens: tokens,
+    })
   })
 })
