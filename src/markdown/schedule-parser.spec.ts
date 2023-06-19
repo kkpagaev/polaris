@@ -10,6 +10,11 @@ describe("ScheduleParser", () => {
 - 16:00 Title 2 | -c green
     description line 1
 
+#Hangar18 
+#PeaceSells
+
+#HolyWars    #Lucretia
+#AngryAgain
 
 - 18:00 - 20:00 Title 3
   
@@ -35,7 +40,13 @@ describe("ScheduleParser", () => {
         ["description line 1"],
         [],
       ),
-      new ScheduleEvent(new Range("18:00", "20:00"), "Title 3", [], [], []),
+      new ScheduleEvent(
+        new Range("18:00", "20:00"),
+        "Title 3",
+        [],
+        [],
+        ["Hangar18", "PeaceSells", "HolyWars", "Lucretia", "AngryAgain"],
+      ),
     ])
   })
 })
