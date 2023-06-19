@@ -19,6 +19,7 @@ function getEditorParams(
 ): [string, Array<string>] {
   switch (editor) {
     case EditorType.VSCODE:
+      // on windows errors on "code"
       if (isWindows()) {
         return ["code.cmd", [filePath, "-w"]]
       }
@@ -33,13 +34,13 @@ function getEditorParams(
 }
 
 export class Editor {
-  constructor(private type: EditorType) {}
+  constructor(private type: EditorType, private body: string) {}
 
-  async editFile(content: string) {
+  async edit() {
     return new Promise((res, rej) => {
-      const tmpfile = this.createTmpFile(content)
+      const tmpfile = this.openEditorInTmpFile()
 
-      /**
+      /*
        * Basicaly this opens editor
        * some editors like vscode will run in bg
        * so we must pass a flag
@@ -50,23 +51,29 @@ export class Editor {
         stdio: "inherit",
       })
 
+      // after close file in edditor updates this.body
       child.on("exit", () => {
-        // after saving a file we pass its content back
         const buffer = readFileSync(tmpfile.name)
 
-        res(buffer.toString())
+        this.body = buffer.toString()
+
+        res(this.body)
       })
 
+      // unexpected behavior
       child.on("error", (err) => {
         rej(err)
       })
     })
   }
 
-  private createTmpFile(content: string) {
+  /*
+   * Creates tmp file and puts body in it
+   */
+  private openEditorInTmpFile() {
     const file = tmp.fileSync()
 
-    writeFileSync(file.name, content)
+    writeFileSync(file.name, this.body)
 
     return file
   }

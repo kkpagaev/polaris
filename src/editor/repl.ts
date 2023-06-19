@@ -1,7 +1,7 @@
 import { Editor, EditorType } from "./editor"
 
-const ed = new Editor(EditorType.VSCODE)
+const ed = new Editor(EditorType.VSCODE, "test")
 
-ed.editFile("test").then((content) => {
+ed.edit().then((content) => {
   console.log(content)
 })
