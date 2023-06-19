@@ -6,10 +6,10 @@ export class ScheduleParser extends BaseParser<ScheduleEvent[]> {
   public parse(): ScheduleEvent[] {
     const events = this.many(() => {
       const event = this.applyParser(EventParser)
-      this.oneOf(["\n"])
-      this.spaces()
-      this.oneOf(["\n"])
-      // this.many(() => this.oneOf(["\n"]))
+
+      this.many(() => {
+        this.emptyLine()
+      })
       return event
     })
 

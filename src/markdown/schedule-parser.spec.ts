@@ -4,17 +4,19 @@ import { ScheduleParser } from "./schedule-parser"
 describe("ScheduleParser", () => {
   it("should parse an entire schedule", () => {
     const input = `- 11:00 - 15:40 Title | -m -c red -p [string, foo@bar.com, vlad]
+
     description line 1  
     description line 2
-  
 - 16:00 Title 2 | -c green
     description line 1
-  
+
+
 - 18:00 - 20:00 Title 3
   
   `
+    const result = new ScheduleParser(input).parse()
 
-    expect(new ScheduleParser(input).parse()).toEqual([
+    expect(result).toEqual([
       new ScheduleEvent(
         new Range("11:00", "15:40"),
         "Title",
