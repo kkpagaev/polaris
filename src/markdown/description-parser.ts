@@ -5,7 +5,11 @@ export class DescriptionParser extends BaseParser<string[]> {
   public parse(): string[] {
     return this.many(() => {
       const res = this.attempt(() => {
-        this.many1(() => this.oneOf(["\n"]))
+        this.many(() => {
+          this.emptyLine()
+        })
+
+        this.expectSat((ch) => ch !== "-")
         this.spaces()
 
         const words = this.many1(() => {

@@ -263,4 +263,9 @@ export abstract class BaseParser<TResult = unknown> {
 
     return lastParser()
   }
+
+  public emptyLine(): void {
+    this.oneOf(["\n"])
+    this.spaces()
+  }
 }

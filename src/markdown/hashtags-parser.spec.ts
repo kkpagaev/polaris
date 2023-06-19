@@ -4,10 +4,11 @@ describe("HashTagsParser", () => {
   it("should parse a single hashtag", () => {
     const input = `
   
-    #foo
-    `
+    #foo`
 
-    expect(new HashTagsParser(input).parse()).toEqual(["foo"])
+    const result = new HashTagsParser(input).parse()
+
+    expect(result).toEqual(["foo"])
   })
 
   it("should parse a multiple hashtags", () => {
@@ -16,11 +17,8 @@ describe("HashTagsParser", () => {
     #foo
     #bar #2  #baz`
 
-    expect(new HashTagsParser(input).parse()).toEqual([
-      "foo",
-      "bar",
-      "2",
-      "baz",
-    ])
+    const result = new HashTagsParser(input).parse()
+
+    expect(result).toEqual(["foo", "bar", "2", "baz"])
   })
 })

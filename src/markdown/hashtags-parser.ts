@@ -6,8 +6,9 @@ export class HashTagsParser extends BaseParser<string[]> {
   public parse(): string[] {
     return this.many(() => {
       const res = this.attempt(() => {
-        this.many1(() => this.oneOf(["\n"]))
-        this.spaces()
+        this.many(() => {
+          this.emptyLine()
+        })
 
         return this.many1(() => {
           const tag = this.parseHashTag()
