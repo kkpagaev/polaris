@@ -1,3 +1,5 @@
+import { OptionInfoSerializer } from "./serializer/option-info.serializer"
+
 export class Range<T> {
   constructor(public start: T, public end: T) {}
 }
@@ -16,4 +18,8 @@ export class ScheduleEvent {
 
 export class OptionInfo<Value = any> {
   constructor(public name: string, public value: Value) {}
+
+  toString() {
+    return new OptionInfoSerializer().serialize(this)
+  }
 }
