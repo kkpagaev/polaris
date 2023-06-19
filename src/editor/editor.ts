@@ -9,12 +9,19 @@ export enum EditorType {
   HELIX,
 }
 
+function isWindows(params: type) {
+  return process.platform === "win32"
+}
+
 function getEditorParams(
   filePath: string,
   editor: EditorType,
 ): [string, Array<string>] {
   switch (editor) {
     case EditorType.VSCODE:
+      if (isWin()) {
+        return ["code.cmd", [filePath, "-w"]]
+      }
       return ["code", [filePath, "-w"]]
     case EditorType.NVIM:
       return ["nvim", [filePath]]
