@@ -6,15 +6,17 @@ export class HashTagsParser extends BaseParser<string[]> {
   public parse(): string[] {
     return this.many(() => {
       const res = this.attempt(() => {
-        this.many(() => {
-          this.emptyLine()
-        })
-
-        return this.many1(() => {
+        const tags = this.many1(() => {
           const tag = this.parseHashTag()
           this.spaces()
           return tag
         })
+
+        this.many(() => {
+          this.emptyLine()
+        })
+
+        return tags
       })
 
       if (!isSuccess(res)) {

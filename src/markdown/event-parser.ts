@@ -7,7 +7,8 @@ import { TimeInfoParser } from "./time-parser"
 
 export class EventParser extends BaseParser<ScheduleEvent> {
   public parse(): ScheduleEvent {
-    this.spaces()
+    const hashTags = this.applyParser(HashTagsParser)
+
     this.matchString("-")
     this.spaces1()
 
@@ -17,9 +18,8 @@ export class EventParser extends BaseParser<ScheduleEvent> {
     const title = this.parseTitle()
     const options = this.parseOptions()
     const description = this.applyParser(DescriptionParser)
-    // const hashTags = this.applyParser(HashTagsParser)
 
-    return new ScheduleEvent(time, title, options, description, [])
+    return new ScheduleEvent(time, title, options, description, hashTags)
   }
 
   private parseTitle(): string {

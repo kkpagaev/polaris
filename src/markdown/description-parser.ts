@@ -9,7 +9,7 @@ export class DescriptionParser extends BaseParser<string[]> {
           this.emptyLine()
         })
 
-        this.expectSat((ch) => ch !== "-")
+        this.expectSat((ch) => ch !== "-" && ch !== "#")
         this.spaces()
 
         const words = this.many1(() => {
