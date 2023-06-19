@@ -35,21 +35,18 @@ function getEditorParams(
 
 /*
  * Creates tmp file with initial body
+ * @returns {string} path to tmp file
  */
-function createTmpFile(body: string): tmp.FileResult {
+export function createTmpFile(body: string): string {
   const file = tmp.fileSync()
 
   writeFileSync(file.name, body)
 
-  return file
+  return file.name
 }
 
 export class Editor {
-  private tmpfile: tmp.FileResult
-
-  constructor(private type: EditorType, body: string) {
-    this.tmpfile = createTmpFile(body)
-  }
+  constructor(private type: EditorType, private filepath: string) {}
 
   async edit(): Promise<string> {
     return new Promise<string>((res, rej) => {
@@ -59,7 +56,7 @@ export class Editor {
        * so we must pass a flag
        * and to ope TUI(vim) application we must inherit STDIO
        */
-      const [cmd, params] = getEditorParams(this.tmpfile.name, this.type)
+      const [cmd, params] = getEditorParams(this.filepath, this.type)
       const child = spawn(cmd, params, {
         stdio: "inherit",
       })
@@ -77,7 +74,7 @@ export class Editor {
   }
 
   getBody() {
-    const buffer = readFileSync(this.tmpfile.name)
+    const buffer = readFileSync(this.filepath)
 
     return buffer.toString()
   }
