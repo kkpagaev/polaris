@@ -33,31 +33,40 @@ function getEditorParams(
   }
 }
 
+/*
+ * Creates tmp file with initial body
+ */
+function createTmpFile(body: string): tmp.FileResult {
+  const file = tmp.fileSync()
+
+  writeFileSync(file.name, body)
+
+  return file
+}
+
 export class Editor {
-  constructor(private type: EditorType, private body: string) {}
+  private tmpfile: tmp.FileResult
 
-  async edit() {
-    return new Promise((res, rej) => {
-      const tmpfile = this.openEditorInTmpFile()
+  constructor(private type: EditorType, body: string) {
+    this.tmpfile = createTmpFile(body)
+  }
 
+  async edit(): Promise<string> {
+    return new Promise<string>((res, rej) => {
       /*
        * Basicaly this opens editor
        * some editors like vscode will run in bg
        * so we must pass a flag
        * and to ope TUI(vim) application we must inherit STDIO
        */
-      const [cmd, params] = getEditorParams(tmpfile.name, this.type)
+      const [cmd, params] = getEditorParams(this.tmpfile.name, this.type)
       const child = spawn(cmd, params, {
         stdio: "inherit",
       })
 
       // after close file in edditor updates this.body
       child.on("exit", () => {
-        const buffer = readFileSync(tmpfile.name)
-
-        this.body = buffer.toString()
-
-        res(this.body)
+        res(this.getBody())
       })
 
       // unexpected behavior
@@ -67,14 +76,9 @@ export class Editor {
     })
   }
 
-  /*
-   * Creates tmp file and puts body in it
-   */
-  private openEditorInTmpFile() {
-    const file = tmp.fileSync()
+  getBody() {
+    const buffer = readFileSync(this.tmpfile.name)
 
-    writeFileSync(file.name, this.body)
-
-    return file
+    return buffer.toString()
   }
 }
