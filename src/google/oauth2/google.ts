@@ -1,3 +1,13 @@
+// exchangeCodeForToken
+// status: 200
+//
+// access_token: ''
+// expires_in: 3599
+// id_token: ''
+// refresh_token: ''
+// scope: ''
+// token_type: 'Bearer'
+
 export interface GoogleOAuthConfig {
   clientId: string
   clientSecret: string
@@ -14,16 +24,6 @@ export interface ExchangeCodeForTokenReponse {
   // Bearer
   token_type: string
 }
-
-// exchangeCodeForToken
-// status: 200
-//
-// access_token: ''
-// expires_in: 3599
-// id_token: ''
-// refresh_token: ''
-// scope: ''
-// token_type: 'Bearer'
 
 export class GoogleOAuth {
   constructor(private config: GoogleOAuthConfig) {}
@@ -51,7 +51,10 @@ export class GoogleOAuth {
         grant_type: "authorization_code",
       }),
     })
+    if (res.status !== 200) {
+      throw new Error("Something gone wrong")
+    }
 
-    return res.json()
+    return (await res.json()) as ExchangeCodeForTokenReponse
   }
 }
