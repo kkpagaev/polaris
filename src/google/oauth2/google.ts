@@ -3,6 +3,28 @@ export interface GoogleOAuthConfig {
   clientSecret: string
   redirectUri: string
 }
+
+export interface ExchangeCodeForTokenReponse {
+  access_token: string
+  expires_in: number
+  id_token: string
+  refresh_token: string
+
+  scope: string
+  // Bearer
+  token_type: string
+}
+
+// exchangeCodeForToken
+// status: 200
+//
+// access_token: ''
+// expires_in: 3599
+// id_token: ''
+// refresh_token: ''
+// scope: ''
+// token_type: 'Bearer'
+
 export class GoogleOAuth {
   constructor(private config: GoogleOAuthConfig) {}
 
