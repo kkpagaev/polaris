@@ -1,5 +1,5 @@
 import { exec } from "child_process"
-import { GoogleOAuth } from "../google/oauth2/google"
+import { GoogleOAuth } from "../google/oauth2/oauth2"
 import { startServer } from "../google/oauth2/server"
 import { Config } from "../config/config"
 
