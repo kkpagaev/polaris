@@ -1,6 +1,6 @@
 import { exec } from "child_process"
-import { GoogleOAuth } from "../oauth2/google"
-import { startServer } from "../oauth2/server"
+import { GoogleOAuth } from "../google/oauth2/google"
+import { startServer } from "../google/oauth2/server"
 import { Config } from "../config/config"
 
 interface LoginOptions {
