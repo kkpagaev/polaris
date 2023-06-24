@@ -1,4 +1,4 @@
-import { ScheduleEvent } from "../event-models"
+import { ScheduleEvent } from "../models/schedule-event"
 import { Serializer } from "./serializer.interface"
 
 export class ScheduleSerializer implements Serializer<ScheduleEvent[]> {

@@ -1,4 +1,5 @@
-import { ScheduleEvent, TimeInfo } from "../event-models"
+import { ScheduleEvent } from "../models/schedule-event"
+import { TimeInfo } from "../models/time-info"
 import { Serializer } from "./serializer.interface"
 import { TimeInfoSerializer } from "./time-info.serializer"
 

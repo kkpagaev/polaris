@@ -1,4 +1,4 @@
-import { OptionInfo } from "../event-models"
+import { OptionInfo } from "../models/option-info"
 import { Serializer } from "./serializer.interface"
 
 export class OptionInfoSerializer implements Serializer<OptionInfo> {

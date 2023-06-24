@@ -1,4 +1,4 @@
-import { OptionInfo } from "../event-models"
+import { OptionInfo } from "../models/option-info"
 import { OptionInfoSerializer } from "./option-info.serializer"
 
 describe("OptionInfoSerializer", () => {
