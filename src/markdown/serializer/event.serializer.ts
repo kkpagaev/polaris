@@ -1,5 +1,6 @@
 import { ScheduleEvent, TimeInfo } from "../event-models"
 import { Serializer } from "./serializer.interface"
+import { TimeInfoSerializer } from "./time-info.serializer"
 
 export class EventSerializer implements Serializer<ScheduleEvent> {
   public serialize(event: ScheduleEvent): string {
@@ -29,10 +30,6 @@ export class EventSerializer implements Serializer<ScheduleEvent> {
   }
 
   private serializeTime(timeInfo: TimeInfo): string {
-    if (typeof timeInfo === "string") {
-      return timeInfo
-    }
-
-    return `${timeInfo.start} - ${timeInfo.end}`
+    return new TimeInfoSerializer().serialize(timeInfo)
   }
 }

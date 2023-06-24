@@ -1,3 +1,4 @@
+import { EventSerializer } from "./serializer/event.serializer"
 import { OptionInfoSerializer } from "./serializer/option-info.serializer"
 
 export class Range<T> {
@@ -14,12 +15,16 @@ export class ScheduleEvent {
     public description: string[],
     public hashTags: string[],
   ) {}
+
+  public toString() {
+    return new EventSerializer().serialize(this)
+  }
 }
 
 export class OptionInfo<Value = any> {
   constructor(public name: string, public value: Value) {}
 
-  toString() {
+  public toString() {
     return new OptionInfoSerializer().serialize(this)
   }
 }
