@@ -1,6 +1,6 @@
-import { OptionInfo } from "./models/option-info"
-import { ScheduleEvent } from "./models/schedule-event"
-import { TimeInfo } from "./models/time-info"
+import { OptionInfo } from "../models/option-info"
+import { ScheduleEvent } from "../models/schedule-event"
+import { TimeInfo } from "../models/time-info"
 import { ScheduleParser } from "./schedule-parser"
 
 describe("ScheduleParser", () => {

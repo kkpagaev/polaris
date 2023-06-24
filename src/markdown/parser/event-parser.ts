@@ -1,8 +1,8 @@
+import { OptionInfo } from "../models/option-info"
+import { ScheduleEvent } from "../models/schedule-event"
 import { BaseParser } from "./base-parser"
 import { DescriptionParser } from "./description-parser"
 import { HashTagsParser } from "./hashtags-parser"
-import { OptionInfo } from "./models/option-info"
-import { ScheduleEvent } from "./models/schedule-event"
 import { OptionsParser } from "./options-parser"
 import { TimeInfoParser } from "./time-parser"
 

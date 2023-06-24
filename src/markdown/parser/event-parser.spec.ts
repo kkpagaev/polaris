@@ -1,6 +1,6 @@
+import { ScheduleEvent } from "../models/schedule-event"
+import { TimeInfo } from "../models/time-info"
 import { EventParser } from "./event-parser"
-import { ScheduleEvent } from "./models/schedule-event"
-import { TimeInfo } from "./models/time-info"
 
 describe("EventParser", () => {
   it("should parse event with time range", () => {

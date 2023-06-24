@@ -1,5 +1,5 @@
+import { TimeInfo } from "../models/time-info"
 import { BaseParser } from "./base-parser"
-import { TimeInfo } from "./models/time-info"
 
 export class TimeInfoParser extends BaseParser<TimeInfo> {
   public parse(): TimeInfo {

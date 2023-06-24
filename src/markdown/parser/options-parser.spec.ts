@@ -1,4 +1,4 @@
-import { OptionInfo } from "./models/option-info"
+import { OptionInfo } from "../models/option-info"
 import { OptionsParser } from "./options-parser"
 
 describe("EventParser", () => {
