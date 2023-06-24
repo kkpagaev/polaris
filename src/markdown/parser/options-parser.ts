@@ -1,5 +1,5 @@
+import { OptionInfo } from "../models/option-info"
 import { BaseParser } from "./base-parser"
-import { OptionInfo } from "./event-models"
 import { isDigit, isLetter } from "./utils"
 
 export class OptionsParser extends BaseParser<OptionInfo[]> {

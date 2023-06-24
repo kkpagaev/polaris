@@ -1,5 +1,5 @@
+import { ScheduleEvent } from "../models/schedule-event"
 import { BaseParser } from "./base-parser"
-import { ScheduleEvent } from "./event-models"
 import { EventParser } from "./event-parser"
 
 export class ScheduleParser extends BaseParser<ScheduleEvent[]> {

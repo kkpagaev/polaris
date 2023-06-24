@@ -1,11 +1,13 @@
-import { OptionInfo, ScheduleEvent, Range } from "../event-models"
+import { OptionInfo } from "../models/option-info"
+import { ScheduleEvent } from "../models/schedule-event"
+import { TimeInfo } from "../models/time-info"
 import { EventSerializer } from "./event.serializer"
 
 describe("EventSerializer", () => {
   it("should serialize an event", () => {
     const result = new EventSerializer().serialize(
       new ScheduleEvent(
-        new Range("11:00", "15:40"),
+        new TimeInfo("11:00", "15:40"),
         "Title",
         [
           new OptionInfo("m", true),
