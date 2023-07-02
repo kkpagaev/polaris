@@ -27,7 +27,7 @@ export async function startServer(port: number, param: string) {
 
       res.end(JSON.stringify({ message: "Hello, Vlad!" }))
       server.stop()
-      resolve(getParam)
+      resolve(<any>getParam)
     })
 
     server.listen(port, () => {
