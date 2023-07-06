@@ -23,6 +23,6 @@ Polaris is calendar managing cli
 
 - [x] Google Auth
 - [x] Save tokens
-- [ ] Markdown Parser
+- [x] Markdown Parser
 - [ ] Fetching day
 - [ ] Editing Days
